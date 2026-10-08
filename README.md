@@ -43,6 +43,18 @@ The application is built around a deliberate contradiction:
 
 ---
 
+## 🚀 Live Demo
+
+<p align="center">
+  <a href="https://trailmate-ai.vercel.app/">
+    <strong>🌿 Try TrailMate AI Live</strong>
+  </a>
+</p>
+
+**Live URL:** https://trailmate-ai.vercel.app/
+
+---
+
 # 💡 The Problem
 
 Our phones make it easier than ever to stay connected, entertained, and occupied.
@@ -343,7 +355,7 @@ The landing page introduces the TrailMate AI concept and allows users to configu
 
 ---
 
-## ⚙️ How it works
+## ⚙️ Mission Generation
 
 Users provide their request, choose an activity, select their available time, and generate a personalized outdoor mission.
 
@@ -393,34 +405,28 @@ The application handles predictable structure and business rules itself.
 
 ---
 
-# 🧠 AI Architecture
-
 ## Why Gemma?
 
-Gemma is a natural fit for TrailMate AI because the project needs an AI model capable of generating **varied, personalized, natural-language outdoor experiences** while aligning with the challenge's focus on **open-weight AI**.
+Gemma is a natural fit for TrailMate AI because the project requires an AI system capable of generating varied, natural-language outdoor experiences while fitting the challenge's focus on open-weight AI.
 
-Instead of relying on a fixed collection of predefined activities, Gemma allows TrailMate AI to dynamically create different missions based on the user's **intent, selected activity, and available time**.
+Instead of relying on a fixed collection of predefined activities, Gemma allows the same application to create different experiences based on the user's intent.
 
-For example, the same:
+For example:
 
 ```text
 Activity: Photography
 Duration: 1 hour
 ```
 
-can produce completely different experiences depending on whether the user asks for something peaceful, adventurous, creative, challenging, or relaxing.
-
-This makes Gemma responsible for the part AI is best suited for:
-
-> **Turning user intent into a creative and personalized outdoor experience.**
+can produce completely different missions depending on the user's request.
 
 ---
 
-## 🏗️ AI Architecture
+# 🏗️ AI Architecture
 
-A key engineering decision in TrailMate AI is the separation between **generative AI content** and **deterministic application logic**.
+One of the important technical decisions in TrailMate AI is the separation between **generative content** and **deterministic application logic**.
 
-Instead of asking Gemma to generate the entire deeply nested mission object, the application asks the model to generate a small set of focused creative fields.
+Instead of asking Gemma to generate the entire deeply nested mission object, the application asks it for a smaller set of concise creative fields.
 
 Gemma generates content such as:
 
@@ -436,13 +442,11 @@ natureChallenge
 phoneFreeTip
 ```
 
-The application then validates this content and constructs the complete mission using predictable application rules.
-
-This keeps the AI layer focused on **creativity and personalization**, while the application remains responsible for **structure, consistency, and business logic**.
+The application then constructs the complete mission.
 
 ---
 
-## 🔄 AI Generation Pipeline
+## AI Generation Pipeline
 
 ```text
 User Request
@@ -484,21 +488,21 @@ User
 
 ## Why Separate AI from Deterministic Logic?
 
-Generative AI is well suited for:
+Generative AI is useful for:
 
-* ✨ Creative writing
-* 🎯 Personalization
-* 💬 Natural-language generation
-* 🔄 Generating varied experiences
+* Creative writing
+* Personalization
+* Natural-language generation
+* Generating varied experiences
 
 Application code is better suited for:
 
-* ⏱️ Predictable durations
-* 📊 Difficulty rules
-* 🧩 Required structure
-* 🛡️ Safety defaults
-* ✅ Data validation
-* 🔄 Application state
+* Predictable durations
+* Difficulty rules
+* Required structure
+* Safety defaults
+* Data validation
+* Application state
 
 TrailMate AI combines both:
 
@@ -512,7 +516,7 @@ Validation
 Reliable Personalized Experience
 ```
 
-This separation prevents the model from becoming responsible for every application rule and makes the overall system more predictable and maintainable.
+This approach avoids making the model responsible for every application rule.
 
 ---
 
@@ -531,7 +535,7 @@ Duration:
 1 hour
 ```
 
-Gemma can transform the request into creative mission content such as:
+Gemma can transform the request into something like:
 
 ```text
 Lens of the Wild
@@ -543,7 +547,7 @@ textures, light, plants, and small moments
 around you.
 ```
 
-The application then combines that AI-generated content with deterministic mission rules:
+The application then builds the complete experience:
 
 ```text
 Activity:
@@ -580,9 +584,7 @@ Put your phone away between photographs
 and focus on what is around you.
 ```
 
-The important part is that the mission is **not hardcoded**.
-
-The same activity and duration can produce a different experience when the user's request changes.
+The exact mission changes based on the user's request.
 
 ---
 
@@ -592,7 +594,7 @@ The same activity and duration can produce a different experience when the user'
 
 TrailMate AI uses the **Next.js App Router** with React and TypeScript.
 
-The frontend manages:
+The interface manages:
 
 * User input
 * Activity selection
@@ -608,7 +610,7 @@ The frontend manages:
 
 ## Backend
 
-AI generation is handled through a dedicated Next.js server route:
+AI generation is handled through a Next.js server route:
 
 ```text
 app/api/generate-mission/route.ts
@@ -616,16 +618,15 @@ app/api/generate-mission/route.ts
 
 The client sends the user's mission requirements to the server.
 
-The server then:
+The server:
 
 1. Builds the Gemma prompt.
 2. Calls the Gemma API.
-3. Parses and validates the response.
-4. Checks the generated content for invalid or repeated data.
-5. Builds the final mission structure using deterministic rules.
-6. Returns the validated mission to the client.
+3. Validates the response.
+4. Builds the final mission structure.
+5. Returns the mission to the client.
 
-Keeping this logic on the server also prevents the AI API key from being exposed to client-side code.
+This keeps the AI API key on the server rather than exposing it in client-side code.
 
 ---
 
@@ -648,20 +649,13 @@ Completed date
 Phone-free minutes
 ```
 
-This approach is appropriate for the current challenge scope because the core experience does not require an account or cloud-based history.
-
-Because the data is stored locally:
-
-* Clearing browser storage removes saved missions.
-* History does not automatically transfer between devices.
-* Different browsers maintain separate histories.
-* No account is required to track local progress.
+This is appropriate for the current challenge scope because the core product experience does not require an account.
 
 ---
 
 # 🎨 Design Philosophy
 
-TrailMate AI is intentionally designed **not to become another application demanding the user's attention**.
+TrailMate AI is intentionally designed to avoid becoming another application that demands attention.
 
 The user journey is:
 
@@ -679,11 +673,11 @@ Complete
 Reflect
 ```
 
-The interface provides only the information needed to begin and complete the mission.
+The interface provides the information needed to begin the mission.
 
-Once the mission starts, the product encourages the user to stop interacting with the interface and focus on the real-world experience.
+Then it encourages the user to stop interacting with the interface.
 
-This creates a fundamentally different product philosophy from traditional engagement-focused applications.
+This is fundamentally different from traditional engagement-focused applications.
 
 ---
 
@@ -813,31 +807,221 @@ GEMINI_API_KEY=your_google_ai_studio_api_key
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# ✅ Production Validation
 
-To learn more about Next.js, take a look at the following resources:
+Before deployment, validate the project with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+and:
 
-## Deploy on Vercel
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The production build validates:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* ESLint
+* TypeScript
+* Next.js compilation
+* Route compilation
+* Static page generation
+* Production optimization
+
+---
+
+# ☁️ Deployment
+
+TrailMate AI is deployed using **Vercel**.
+
+### Production URL
+
+https://trailmate-ai.vercel.app/
+
+The deployment requires the following environment variable:
+
+```text
+GEMINI_API_KEY
+```
+
+The API key should be configured through the deployment platform's environment variable settings rather than committed to source control.
+
+---
+
+# 🔐 Data & Privacy
+
+TrailMate AI does not require an account for the core experience.
+
+Completed mission history is stored locally in the user's browser.
+
+Because history is stored locally:
+
+* Clearing browser storage removes saved missions.
+* History does not automatically transfer between devices.
+* Different browsers maintain separate histories.
+* No account is required to track local progress.
+
+The Gemma request is handled through the application's server-side API route so the Gemini API key is not directly exposed to the browser.
+
+---
+
+# 🛡️ Safety
+
+Outdoor activities should always be adapted to the user's:
+
+* Environment
+* Physical ability
+* Weather conditions
+* Local conditions
+
+TrailMate AI provides safety guidance as part of generated missions, but users should use their own judgment and avoid unsafe situations.
+
+The application is intended to provide inspiration and structure for outdoor activities, not professional medical, emergency, or wilderness advice.
+
+---
+
+# 🏆 Challenge Context
+
+TrailMate AI was created for the **DEV Community Hacktoberfest 2026 "Touch Grass" challenge**.
+
+The challenge focuses on using open-source or open-weight AI to create products that encourage people to spend less time on screens and more time outside.
+
+TrailMate AI addresses that goal directly:
+
+```text
+AI creates the mission.
+        ↓
+The user leaves the screen.
+        ↓
+The user explores outside.
+        ↓
+The mission gets completed.
+```
+
+AI is not used simply because AI is available.
+
+It is used because personalization makes outdoor missions more relevant, varied, and engaging.
+
+---
+
+# ❤️ Why This Project Matters
+
+Technology is increasingly good at keeping people inside digital environments.
+
+TrailMate AI explores the opposite possibility:
+
+> **Can technology help people disconnect from technology?**
+
+The project uses AI as a **bridge rather than a destination**.
+
+Gemma generates the personalized experience.
+
+The application provides enough structure to make it actionable.
+
+Phone-Free Mode encourages the user to put the device away.
+
+The result is an AI product whose success is measured partly by the user's willingness to stop using it.
+
+---
+
+# 🧠 Engineering Decisions
+
+## Structured AI Output
+
+Rather than relying on the model to produce a large, deeply nested object, TrailMate AI asks Gemma for a smaller set of creative fields.
+
+This reduces the amount of structured output generated by the model and allows the application to control predictable data.
+
+---
+
+## Validation & Retry
+
+AI-generated content is validated before being converted into the final mission.
+
+The application checks for:
+
+* Missing required content
+* Empty responses
+* Repeated text
+* Invalid generated content
+
+The generation flow also supports controlled retry behavior when an AI response does not satisfy the required format.
+
+---
+
+## Deterministic Mission Rules
+
+Predictable application behavior remains in application code.
+
+For example, mission duration determines step duration and difficulty rather than asking the AI to arbitrarily decide these values.
+
+This creates a clear separation:
+
+```text
+Gemma
+→ Creative personalization
+
+Application logic
+→ Deterministic behavior
+
+Validation
+→ Reliability
+```
+
+---
+
+# 🔮 Future Possibilities
+
+TrailMate AI could eventually expand with:
+
+* 📍 Location-aware mission generation
+* 🌦️ Weather-aware recommendations
+* 🗺️ GPS-based outdoor missions
+* 👥 Community-created missions
+* 👫 Group adventures
+* 🏅 Outdoor achievement tracking
+* 📅 Calendar integration
+* 🎯 Richer activity personalization
+* 📊 Advanced progress analytics
+
+These features are intentionally outside the current core scope.
+
+The fundamental experience remains:
+
+> **Generate a mission. Go outside.**
+
+---
+
+# 🛣️ Roadmap Philosophy
+
+Future development should follow one principle:
+
+> **Add technology only when it improves the outdoor experience.**
+
+A feature should not be added simply because it makes the application more complex.
+
+The goal is not to build another platform that users spend hours inside.
+
+The goal is to build a tool that gives them a reason to step away.
+
+---
+
+# 👩‍💻 Author
+
+Shruti Hiraman Kotgire
+
+<p align="center">
+  <strong>🌿 Generate a mission. Touch grass. Come back when you're done.</strong>
+</p>
