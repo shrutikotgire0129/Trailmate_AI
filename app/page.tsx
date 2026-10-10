@@ -30,6 +30,7 @@ export default function Home() {
   const [phoneFreeStartedAt, setPhoneFreeStartedAt] = useState<number | null>(
     null,
   );
+  const [phoneFreeElapsedMs, setPhoneFreeElapsedMs] = useState(0);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,6 +41,7 @@ export default function Home() {
     setPhoneFreeMode(false);
     setPhoneFreeCountdown(5);
     setPhoneFreeStartedAt(null);
+    setPhoneFreeElapsedMs(0);
 
     if (!request.trim()) {
       setError("Tell us what kind of outdoor experience you want.");
@@ -113,7 +115,8 @@ export default function Home() {
     );
 
     const natureScore = completedSteps.length === mission.steps.length ? 20 : 0;
-    const phoneFreeScore = phoneFreeStartedAt ? 20 : 0;
+    const phoneFreeScore =
+      phoneFreeStartedAt !== null || phoneFreeElapsedMs > 0 ? 20 : 0;
 
     return Math.min(100, stepScore + natureScore + phoneFreeScore);
   }
@@ -123,9 +126,14 @@ export default function Home() {
       return;
     }
 
-    const phoneFreeMinutes = phoneFreeStartedAt
-      ? Math.max(1, Math.round((Date.now() - phoneFreeStartedAt) / 60000))
-      : 0;
+    const totalPhoneFreeMs =
+      phoneFreeElapsedMs +
+      (phoneFreeStartedAt !== null ? Date.now() - phoneFreeStartedAt : 0);
+
+    const phoneFreeMinutes =
+      totalPhoneFreeMs > 0
+        ? Math.max(1, Math.round(totalPhoneFreeMs / 60000))
+        : 0;
 
     const historyItem: MissionHistoryItem = {
       id: crypto.randomUUID(),
@@ -150,6 +158,7 @@ export default function Home() {
       "trailmate-mission-history",
       JSON.stringify([historyItem, ...existingHistory]),
     );
+    window.dispatchEvent(new Event("storage"));
   }
 
   useEffect(() => {
@@ -182,8 +191,14 @@ export default function Home() {
             <button
               type="button"
               onClick={() => {
-                setPhoneFreeMode(false);
+                if (phoneFreeStartedAt !== null) {
+                  setPhoneFreeElapsedMs(
+                    (current) => current + (Date.now() - phoneFreeStartedAt),
+                  );
+                }
+
                 setPhoneFreeStartedAt(null);
+                setPhoneFreeMode(false);
                 setPhoneFreeCountdown(5);
               }}
               className="rounded-lg border border-[#31572c] px-3 py-2 text-xs font-semibold text-[#31572c]"
@@ -663,6 +678,7 @@ export default function Home() {
                         setPhoneFreeMode(false);
                         setPhoneFreeCountdown(5);
                         setPhoneFreeStartedAt(null);
+                        setPhoneFreeElapsedMs(0);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                       className="mt-5 rounded-xl bg-[#31572c] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#264723]"
